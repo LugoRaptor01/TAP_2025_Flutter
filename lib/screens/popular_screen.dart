@@ -43,6 +43,7 @@ class _PopularScreenState extends State<PopularScreen>{
                 return ItemPopular(snapshot.data![index]);
               },
             );
+            
           } else {
 
             if (snapshot.hasError) {

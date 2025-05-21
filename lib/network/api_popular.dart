@@ -11,5 +11,6 @@ class ApiPopular {
   final res = response.data['results'] as List;
 
   return res.map((movie) => PopularModel.fromMap(movie)).toList();
+  
   }
 }
