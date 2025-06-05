@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/network/api_popular.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:flutter_application_2/models/popular_model.dart';
@@ -12,20 +13,19 @@ class DetailedPopularMovie extends StatefulWidget {
 }
 
 class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
+
   late YoutubePlayerController _ytController;
+  late Future<String?> _trailerFuture;
+  late PopularModel popular; // Mover la declaración aquí
+  final ApiMovie _apiMovie = ApiMovie();
 
   @override
-  void initState() {
-    super.initState();
-    // Inicializa el controlador de YouTube con un video de ejemplo
-    _ytController = YoutubePlayerController(
-      params: const YoutubePlayerParams(
-        showControls: true,
-        mute: false,
-        showFullscreenButton: true,
-        loop: false,
-      ),
-    )..loadVideoById(videoId: 'dQw4w9WgXcQ'); // ID de video de ejemplo
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    popular = ModalRoute.of(context)!.settings.arguments as PopularModel;
+
+    _trailerFuture = _apiMovie.fetchTrailerKey(popular.id);
   }
 
   @override
@@ -103,31 +103,29 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
               child: Column(
                 children: [
                   // Reproductor de YouTube
-                  Hero(
-                    tag: 'trailer-${popular.id}',
-                    child: Container(
-                      width: 600,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 6,
-                            spreadRadius: 2,
+                  FutureBuilder<String?>(
+                    future: _trailerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return _buildPlaceholder();
+                      } else if (snapshot.hasError || snapshot.data == null) {
+                        return _buildError();
+                      } else {
+                        // ✅ Aquí snapshot sí existe
+                        _ytController = YoutubePlayerController.fromVideoId(
+                          videoId: snapshot.data!,
+                          autoPlay: false,
+                          params: const YoutubePlayerParams(
+                            showFullscreenButton: true,
+                            showVideoAnnotations: false,
                           ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: YoutubePlayerScaffold(
-                          controller: _ytController,
-                          aspectRatio: 16 / 9,
-                          builder: (context, player) => player,
-                        ),
-                      ),
-                    ),
+                        );
+
+                        return _buildYoutubePlayer();
+                      }
+                    },
                   ),
+
                   const SizedBox(height: 16),
 
                   // Información general
@@ -287,4 +285,25 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
       ),
     );
   }
+
+  Widget _buildPlaceholder() {
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
 }
+
+Widget _buildError() {
+  return const Center(
+    child: Icon(Icons.error_outline, color: Colors.red),
+  );
+}
+
+Widget _buildYoutubePlayer() {
+  return YoutubePlayerScaffold(
+    controller: _ytController,
+    aspectRatio: 16 / 9,
+    builder: (context, player) => player,
+  );
+}
+}
+
