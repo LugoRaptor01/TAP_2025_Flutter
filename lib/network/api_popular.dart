@@ -1,28 +1,23 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_application_2/models/popular_model.dart';
+import '../models/popular_model.dart'; // Asegúrate de importar tu modelo
 
 class ApiPopular {
-
-  final URL = 'https://api.themoviedb.org/3/movie/popular?api_key=5019e68de7bc112f4e4337a500b96c56&language=es-MX&page=1';
-
-  Future<List<PopularModel>> getPopularMovies() async {  // ← Ahora sí retorna una lista
-  final dio = Dio();
-  final response = await dio.get(URL);
-  final res = response.data['results'] as List;
-
-  return res.map((movie) => PopularModel.fromMap(movie)).toList();
-  
-  }
-}
-
-class ApiMovie {
-
   final Dio _dio = Dio();
-  final URL = 'https://api.themoviedb.org/3';
+  final String _baseUrl = 'https://api.themoviedb.org/3';
   final String _apiKey = '5019e68de7bc112f4e4337a500b96c56';
+  final String _language = 'es-MX';
 
+  // Obtener películas populares
+  Future<List<PopularModel>> getPopularMovies() async {
+    final url = '$_baseUrl/movie/popular?api_key=$_apiKey&language=$_language&page=1';
+    final response = await _dio.get(url);
+    final results = response.data['results'] as List;
+    return results.map((movie) => PopularModel.fromMap(movie)).toList();
+  }
+
+  // Obtener trailer de una película
   Future<String?> fetchTrailerKey(int movieId) async {
-    final url = '$URL/movie/$movieId/videos?api_key=$_apiKey&language=es-MX';
+    final url = '$_baseUrl/movie/$movieId/videos?api_key=$_apiKey&language=$_language';
     final response = await _dio.get(url);
     final results = response.data['results'] as List;
 
@@ -34,9 +29,9 @@ class ApiMovie {
     return youtubeTrailer != null ? youtubeTrailer['key'] : null;
   }
 
+  // Obtener actores de una película
   Future<List<Map<String, dynamic>>> fetchActors(int movieId) async {
-    final url = '$_apiKey/movie/$movieId/credits?api_key=$_apiKey&language=es-MX';
-
+    final url = '$_baseUrl/movie/$movieId/credits?api_key=$_apiKey&language=$_language';
     final response = await _dio.get(url);
     final cast = response.data['cast'] as List;
 

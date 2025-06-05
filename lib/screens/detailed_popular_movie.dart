@@ -17,7 +17,9 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
   late YoutubePlayerController _ytController;
   late Future<String?> _trailerFuture;
   late PopularModel popular; // Mover la declaración aquí
-  final ApiMovie _apiMovie = ApiMovie();
+  late Future<List<Map<String, dynamic>>> _actorsFuture;
+  
+  final ApiPopular _apiPopular = ApiPopular();
 
   @override
   void didChangeDependencies() {
@@ -25,7 +27,8 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
 
     popular = ModalRoute.of(context)!.settings.arguments as PopularModel;
 
-    _trailerFuture = _apiMovie.fetchTrailerKey(popular.id);
+    _trailerFuture = _apiPopular.fetchTrailerKey(popular.id);
+    _actorsFuture = _apiPopular.fetchActors(popular.id);
   }
 
   @override
@@ -241,37 +244,58 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
                         const SizedBox(height: 8),
                         SizedBox(
                           height: 150,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: Colors.grey[900],
-                                      child: Text(
-                                        '${index + 1}',
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Actor ${index + 1}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: _actorsFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No se pudo cargar el reparto.',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               );
-                            },
-                          ),
+                            } else {
+                              final actors = snapshot.data!;
+                              return SizedBox(
+                                height: 150,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: actors.length.clamp(0, 10), // Limita máximo 10 actores
+                                  itemBuilder: (context, index) {
+                                    final actor = actors[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 12.0),
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: CachedNetworkImageProvider(
+                                              'https://image.tmdb.org/t/p/w200${actor['profile_path']}',
+                                            ),
+                                            backgroundColor: Colors.grey[900],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          SizedBox(
+                                            width: 80,
+                                            child: Text(
+                                              actor['name'],
+                                              style: const TextStyle(color: Colors.white),
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          },
+                        ),
+
                         ),
                       ],
                     ),
