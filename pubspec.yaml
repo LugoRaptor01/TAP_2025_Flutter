@@ -17,6 +17,10 @@ dependencies:
   sqflite: ^2.4.1
   path_provider: ^2.1.5
   convex_bottom_bar: ^3.2.0
+  flutter_rating_bar: ^4.0.1
+  shimmer: ^2.0.0
+  cached_network_image: ^3.4.1
+  youtube_player_iframe: ^5.2.1 
 
 
 dev_dependencies:
@@ -31,3 +35,4 @@ flutter:
     - assets/logo.png
     - assets/boton.json
     - assets/loading.json
+    - assets/loading_api.gif

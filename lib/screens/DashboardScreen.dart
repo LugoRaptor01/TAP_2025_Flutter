@@ -32,25 +32,29 @@ class DashboardScreen extends StatelessWidget{
               Navigator.pop(context);
               Navigator.pushNamed(context, '/chall');
             },
-            icon: Icons.home, label: 'Challenge 1'),
-            SidebarXItem(
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/api');
+            icon: Icons.shop_2, label: 'Challenge 1'),
+          SidebarXItem(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/api');
 
-        },
-        icon: Icons.movie, label: 'Popular Movies'
-      )
+            },
+            icon: Icons.movie, label: 'Popular Movies'
+          )
+
         ],
+
       ),
       appBar: AppBar(
         title: Text('Panel de Control'),
       ),
+
       body: HawkFabMenu(
         icon: AnimatedIcons.menu_arrow,
         body: const Center(
-          child: Text('Si')
+          child: Text('Menú Principal')
         ),
+        
         items:[
           HawkFabMenuItem(
             label: 'Modo N',

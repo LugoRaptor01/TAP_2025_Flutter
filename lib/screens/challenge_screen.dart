@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
-
 class ChallengeScreen extends StatelessWidget {
   final bool showAppBar; // Nuevo parámetro
   const ChallengeScreen({super.key, this.showAppBar = true});
@@ -106,7 +105,7 @@ class ModelKitCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 // Detalles del modelo
-                Text(
+                /*Text(
                   modelKit.details,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
@@ -114,12 +113,14 @@ class ModelKitCard extends StatelessWidget {
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                ),
+                )*/
                 const SizedBox(height: 12),
                 // Precio y botón
                 Row(
+
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+
                     Text(
                       '\$${modelKit.price}',
                       style: const TextStyle(
@@ -128,8 +129,9 @@ class ModelKitCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: ( ) {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: modelKit.color,
@@ -137,15 +139,20 @@ class ModelKitCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: 16, vertical: 8
+                        ),
                       ),
-                      child: const Text('BUY'),
+                      child: const Text('Detalles'),
                     ),
+
                   ],
                 ),
+
               ],
             ),
+
           ),
+
           // Etiqueta de marca si existe
           if (modelKit.brand.isNotEmpty)
             Positioned(
@@ -175,7 +182,7 @@ class ModelKitCard extends StatelessWidget {
 
 class ModelKit {
   final String name;
-  final String details;
+  //final String details;
   final String imageUrl;
   final Color color;
   final String price;
@@ -183,7 +190,7 @@ class ModelKit {
 
   ModelKit({
     required this.name,
-    required this.details,
+    //required this.details,
     required this.imageUrl,
     required this.color,
     required this.price,
@@ -194,7 +201,7 @@ class ModelKit {
 final List<ModelKit> modelKits = [
   ModelKit(
     name: 'GWH F-14D Tomcat',
-    details: '1/72 Scale Model Kit #K7201',
+    //details: '1/72 Scale Model Kit #K7201',
     imageUrl: 'https://m.media-amazon.com/images/I/61lkqZT17TL._AC_SX679_.jpg',
     color: const Color(0xFF37474F),
     price: '599.99',
@@ -203,7 +210,7 @@ final List<ModelKit> modelKits = [
 
   ModelKit(
     name: 'Revell Spitfire Mk.II',
-    details: '1/48 Scale #03959 - Germany',
+    //details: '1/48 Scale #03959 - Germany',
     imageUrl: 'https://m.media-amazon.com/images/I/61MU0p2xuKL._AC_SL1500_.jpg',
     color: const Color(0xFF37474F),
     price: '665.00',
@@ -211,21 +218,30 @@ final List<ModelKit> modelKits = [
   ),
 
   ModelKit(
-    name: 'Tamiya F-16CJ Fighting Falcon',
-    details: '1/144 Scale #60724',
+    name: 'Revell F-16CJ Fighting Falcon',
+    //details: '1/144 Scale #60724',
     imageUrl: 'https://m.media-amazon.com/images/I/613IZDJzZ5L._AC_SX679_.jpg',
     color: const Color(0xFF37474F),
     price: '549.99',
-    brand: 'Tamiya',
+    brand: 'Revell',
   ),
 
   ModelKit(
     name: 'Airfix Messerschmitt Bf 109E-4',
-    details: '1/72 Scale #A01071',
+    //details: '1/72 Scale #A01071',
     imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_966840-MLM81977168472_022025-O.webp',
     color: const Color(0xFF37474F),
     price: '399.99',
     brand: 'Airfix',
+  ),
+
+  ModelKit(
+    name: 'Italeri Sukhoi Su-34/Su-32',
+    //details: '1/72 Scale #1379',
+    imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_2X_639089-MLM31921022130_082019-F.webp',
+    color: const Color(0xFF37474F),
+    price: '837.25',
+    brand: 'Italeri',
   ),
 
 ];

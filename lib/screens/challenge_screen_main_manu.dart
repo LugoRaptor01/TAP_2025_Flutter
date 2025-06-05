@@ -32,6 +32,7 @@ class _ChallengeMainMenuState extends State<ChallengeMainMenu> {
           TabItem(icon: Icons.palette, title: 'Pintura, pegamento y más'),
           //TabItem(icon: Icons.adhesive, title: 'Cementos'),
         ],
+        
         initialActiveIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
         backgroundColor: Colors.blue,

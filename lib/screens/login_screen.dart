@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   isLoading = true;
                   setState((){});
 
-                  Future.delayed(Duration(seconds: 4)).then((value) {
+                  Future.delayed(Duration(seconds: 2)).then((value) {
                     Navigator.pushNamed(context, '/dash');
                   },);
 

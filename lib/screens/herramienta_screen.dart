@@ -41,7 +41,7 @@ class ToolsScreen extends StatelessWidget {
 final List<ModelKit> tools = [
   ModelKit(
     name: 'Pinzas en ángulo',
-    details: 'Par de pinzas en ángulo de acero inoxidable.',
+    //details: 'Par de pinzas en ángulo de acero inoxidable.',
     imageUrl: 'https://m.media-amazon.com/images/I/51AAbG5sjaL._AC_SL1500_.jpg',
     color: const Color.fromARGB(255, 44, 39, 38),
     price: '485.17',
@@ -50,7 +50,7 @@ final List<ModelKit> tools = [
 
   ModelKit(
     name: 'Pinza de corte',
-    details: 'Par de pinzas de corte para plástico de acero inoxidable.',
+    //details: 'Par de pinzas de corte para plástico de acero inoxidable.',
     imageUrl: 'https://m.media-amazon.com/images/I/41-oSlx3TXL._AC_SL1200_.jpg',
     color: const Color.fromARGB(255, 44, 39, 38),
     price: '1056.32',
@@ -59,7 +59,7 @@ final List<ModelKit> tools = [
 
   ModelKit(
     name: 'Cutter Exacto',
-    details: 'Cutter de tipo exacto con puntas de acero inoxidable para modelos de plástico.',
+    //details: 'Cutter de tipo exacto con puntas de acero inoxidable para modelos de plástico.',
     imageUrl: 'https://m.media-amazon.com/images/I/61kK2OXJj9L._AC_SL1500_.jpg',
     color: const Color.fromARGB(255, 44, 39, 38),
     price: '508.34',
@@ -68,10 +68,30 @@ final List<ModelKit> tools = [
 
   ModelKit(
     name: 'Tapete de corte',
-    details: 'Tapete de corte para manualidades con guias de 45 x 30 cm (Verde).',
+    //details: 'Tapete de corte para manualidades con guias de 45 x 30 cm (Verde).',
     imageUrl: 'https://m.media-amazon.com/images/I/81GOxg31u9L._AC_SL1500_.jpg',
     color: const Color.fromARGB(255, 44, 39, 38),
     price: '299.00',
     brand: 'Seafon',
   ),
+
+  ModelKit(
+    name: 'Manos Extras con lupa',
+    //details: 'Soporte de apoyo para modelismo con pinzas ',
+    imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_2X_914305-MLM81547846991_122024-F-manos-extras-c-lupa-modelismo-tamiya-revell-italeri-testors.webp',
+    color: const Color.fromARGB(255, 44, 39, 38),
+    price: '289.00',
+    brand: 'Helping Hand',
+  ),
+
+  ModelKit(
+    name: 'Kit profesional de aerógrafo para modelismo',
+    //details: 'Kit de aerografo profesional. Incluye estación de bombeo eléctrica, cambios de boquillas y escobillas de limpieza.',
+    imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_2X_639485-CBT81276948146_122024-F.webp',
+    color: const Color.fromARGB(255, 44, 39, 38),
+    price: '1084.91',
+    brand: 'Genérico',
+  ),
+
+
 ];
