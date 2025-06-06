@@ -60,7 +60,6 @@ class _PopularScreenState extends State<PopularScreen>{
     );
   }
 
-  //generacion de un widget a través de un método
   Widget ItemPopular(PopularModel popular) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),

@@ -15,30 +15,28 @@ class _ChallengeMainMenuState extends State<ChallengeMainMenu> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const ChallengeScreen(showAppBar: true), // Modificado
-    const ToolsScreen(showAppBar: true),     // Modificado
+    const ChallengeScreen(showAppBar: true),      // Modificado
+    const ToolsScreen(showAppBar: true),          // Modificado
     const ConsumiblesScreen(showAppBar: true),    // Modificado
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Se elimina el AppBar principal aquí
       body: _screens[_currentIndex],
       bottomNavigationBar: ConvexAppBar(
         items: const [
           TabItem(icon: Icons.airplanemode_active, title: 'Modelos'),
           TabItem(icon: Icons.build, title: 'Herramientas'),
-          TabItem(icon: Icons.palette, title: 'Pintura, pegamento y más'),
-          //TabItem(icon: Icons.adhesive, title: 'Cementos'),
+          TabItem(icon: Icons.palette, title: 'Consumibles'),
         ],
-        
         initialActiveIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
         backgroundColor: Colors.blue,
-        style: TabStyle.react, // Cambiado a react para 4 ítems
+        style: TabStyle.react,
         activeColor: Colors.white,
         color: Colors.white70,
+        height: 55,
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/screens/challenge_screen.dart'; // Para usar ModelKitCard
+import 'package:flutter_application_2/screens/challenge_screen.dart';
 
 class ToolsScreen extends StatelessWidget {
   final bool showAppBar;
