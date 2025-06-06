@@ -16,7 +16,7 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
 
   late YoutubePlayerController _ytController;
   late Future<String?> _trailerFuture;
-  late PopularModel popular; // Mover la declaración aquí
+  late PopularModel popular; 
   late Future<List<Map<String, dynamic>>> _actorsFuture;
   
   final ApiPopular _apiPopular = ApiPopular();
@@ -40,64 +40,89 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
   @override
   Widget build(BuildContext context) {
     final popular = ModalRoute.of(context)!.settings.arguments as PopularModel;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 250,
+            expandedHeight: screenHeight * 0.4,
+            stretch: true,
             pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Hero(
-                tag: 'title-${popular.id}',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Stack(
-                      children: [
-                        // Efecto de borde
-                        Text(
-                          popular.title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            foreground: Paint()
-                              ..style = PaintingStyle.stroke
-                              ..strokeWidth = 3
-                              ..color = Colors.black,
-                          ),
+            flexibleSpace: LayoutBuilder(
+              builder: (context, constraints) {
+                return FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Hero(
+                    tag: 'title-${popular.id}',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        // Texto principal
-                        Text(
-                          popular.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Stack(
+                          children: [
+                            // Efecto de borde
+                            Text(
+                              popular.title,
+                              style: TextStyle(
+                                fontSize: 16,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 3
+                                  ..color = Colors.black,
+                              ),
+                            ),
+                            // Texto principal
+                            Text(
+                              popular.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              background: Hero(
-                tag: 'backdrop-${popular.id}',
-                child: CachedNetworkImage(
-                  imageUrl: popular.backdropPath,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(color: Colors.grey[900]),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey[900],
-                    child: const Icon(Icons.error, color: Colors.white),
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Imagen de fondo.
+                      CachedNetworkImage(
+                        imageUrl: popular.backdropPath,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(color: Colors.grey[900]),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[900],
+                          child: const Icon(Icons.error, color: Color.fromARGB(255, 68, 67, 67)),
+                        ),
+                      ),
+                      
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.3),
+                              Colors.black.withOpacity(0.7),
+                              Colors.black,
+                            ],
+                            stops: const [0.0, 0.3, 0.7, 1.0],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
           SliverToBoxAdapter(
@@ -114,7 +139,7 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
                       } else if (snapshot.hasError || snapshot.data == null) {
                         return _buildError();
                       } else {
-                        // ✅ Aquí snapshot sí existe
+                        
                         _ytController = YoutubePlayerController.fromVideoId(
                           videoId: snapshot.data!,
                           autoPlay: false,
@@ -138,51 +163,99 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
                       color: Colors.black.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Column(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          popular.title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${popular.releaseDate} • ${popular.originalLanguage.toUpperCase()}',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            RatingBarIndicator(
-                              rating: popular.voteAverage / 2,
-                              itemBuilder: (context, index) =>
-                                  const Icon(Icons.star, color: Colors.amber),
-                              itemCount: 5,
-                              itemSize: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${popular.voteAverage.toStringAsFixed(1)}/10',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                        // Póster de la película
+                        Hero(
+                          tag: 'poster-${popular.id}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: popular.posterPath.startsWith('http')
+                                  ? popular.posterPath
+                                  : 'https://image.tmdb.org/t/p/w500${popular.posterPath}',
+                              width: 120, // Aumenté un poco el tamaño
+                              height: 180,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                width: 120,
+                                height: 180,
+                                color: Colors.grey[900],
+                                child: const Center(child: CircularProgressIndicator()),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                width: 120,
+                                height: 180,
+                                color: Colors.grey[900],
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Error al cargar',
+                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${popular.voteCount} votos',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 12,
+
+                        const SizedBox(width: 16),
+
+                        // Información de la película
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                popular.title,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '${popular.releaseDate} • ${popular.originalLanguage.toUpperCase()}',
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  RatingBarIndicator(
+                                    rating: popular.voteAverage / 2,
+                                    itemBuilder: (context, index) =>
+                                        const Icon(Icons.star, color: Colors.amber),
+                                    itemCount: 5,
+                                    itemSize: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${popular.voteAverage.toStringAsFixed(1)}/10',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${popular.voteCount} votos',
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -242,60 +315,59 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        SizedBox(
-                          height: 150,
-                          child: FutureBuilder<List<Map<String, dynamic>>>(
-                          future: _actorsFuture,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
-                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(
-                                child: Text(
-                                  'No se pudo cargar el reparto.',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              );
-                            } else {
-                              final actors = snapshot.data!;
-                              return SizedBox(
-                                height: 150,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: actors.length.clamp(0, 10), // Limita máximo 10 actores
-                                  itemBuilder: (context, index) {
-                                    final actor = actors[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 12.0),
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 40,
-                                            backgroundImage: CachedNetworkImageProvider(
-                                              'https://image.tmdb.org/t/p/w200${actor['profile_path']}',
+                          SizedBox(
+                            height: 150,
+                            child: FutureBuilder<List<Map<String, dynamic>>>(
+                            future: _actorsFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                                return const Center(
+                                  child: Text(
+                                    'No se pudo cargar el reparto.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              } else {
+                                final actors = snapshot.data!;
+                                return SizedBox(
+                                  height: 150,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: actors.length.clamp(0, 10),
+                                    itemBuilder: (context, index) {
+                                      final actor = actors[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 12.0),
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: CachedNetworkImageProvider(
+                                                'https://image.tmdb.org/t/p/w200${actor['profile_path']}',
+                                              ),
+                                              backgroundColor: Colors.grey[900],
                                             ),
-                                            backgroundColor: Colors.grey[900],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          SizedBox(
-                                            width: 80,
-                                            child: Text(
-                                              actor['name'],
-                                              style: const TextStyle(color: Colors.white),
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
+                                            const SizedBox(height: 8),
+                                            SizedBox(
+                                              width: 80,
+                                              child: Text(
+                                                actor['name'],
+                                                style: const TextStyle(color: Colors.white),
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                          },
-                        ),
-
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -311,23 +383,22 @@ class _DetailedPopularMovieState extends State<DetailedPopularMovie> {
   }
 
   Widget _buildPlaceholder() {
-  return const Center(
-    child: CircularProgressIndicator(),
-  );
-}
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
 
-Widget _buildError() {
-  return const Center(
-    child: Icon(Icons.error_outline, color: Colors.red),
-  );
-}
+  Widget _buildError() {
+    return const Center(
+      child: Icon(Icons.error_outline, color: Colors.red),
+    );
+  }
 
-Widget _buildYoutubePlayer() {
-  return YoutubePlayerScaffold(
-    controller: _ytController,
-    aspectRatio: 16 / 9,
-    builder: (context, player) => player,
-  );
+  Widget _buildYoutubePlayer() {
+    return YoutubePlayerScaffold(
+      controller: _ytController,
+      aspectRatio: 16 / 9,
+      builder: (context, player) => player,
+    );
+  }
 }
-}
-

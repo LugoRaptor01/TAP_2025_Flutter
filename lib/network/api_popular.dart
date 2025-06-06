@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/popular_model.dart'; // Asegúrate de importar tu modelo
+import '../models/popular_model.dart';
 
 class ApiPopular {
   final Dio _dio = Dio();
