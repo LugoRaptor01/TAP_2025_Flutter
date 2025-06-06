@@ -13,17 +13,34 @@ class ChallengeMainMenu extends StatefulWidget {
 
 class _ChallengeMainMenuState extends State<ChallengeMainMenu> {
   int _currentIndex = 0;
+  final PageController _pageController = PageController();
 
   final List<Widget> _screens = [
-    const ChallengeScreen(showAppBar: true),      // Modificado
-    const ToolsScreen(showAppBar: true),          // Modificado
-    const ConsumiblesScreen(showAppBar: true),    // Modificado
+    const ChallengeScreen(showAppBar: true),
+    const ToolsScreen(showAppBar: true),
+    const ConsumiblesScreen(showAppBar: true),
   ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: Container(
+        color: const Color(0xFF4B6F44).withOpacity(0.8),
+        child: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: _screens,
+          onPageChanged: (index) {
+            setState(() => _currentIndex = index);
+          },
+        ),
+      ),
       bottomNavigationBar: ConvexAppBar(
         items: const [
           TabItem(icon: Icons.airplanemode_active, title: 'Modelos'),
@@ -31,10 +48,16 @@ class _ChallengeMainMenuState extends State<ChallengeMainMenu> {
           TabItem(icon: Icons.palette, title: 'Consumibles'),
         ],
         initialActiveIndex: _currentIndex,
-        onTap: (int index) => setState(() => _currentIndex = index),
-        backgroundColor: Colors.blue,
+        onTap: (int index) {
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
+        backgroundColor: const Color.fromARGB(255, 13, 13, 56),
         style: TabStyle.react,
-        activeColor: Colors.white,
+        activeColor: const Color.fromARGB(255, 7, 220, 228),
         color: Colors.white70,
         height: 55,
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/detalles_producto_screen.dart';
 //import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class ChallengeScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class ChallengeScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         )
-      :null, // AppBar solo se muestra si showAppBar es true
+      :null,
       body: GridView.builder(
 
         padding: const EdgeInsets.all(16),
@@ -131,20 +132,30 @@ class ModelKitCard extends StatelessWidget {
                     ),
 
                     ElevatedButton(
-                      onPressed: ( ) {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: modelKit.color,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8
-                        ),
-                      ),
-                      child: const Text('Detalles'),
-                    ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                ProductDetailsScreen(product: modelKit),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(0.0, 1.0); // Desliza desde abajo
+                              const end = Offset.zero;
+                              const curve = Curves.ease;
 
+                              final tween = Tween(begin: begin, end: end)
+                                  .chain(CurveTween(curve: curve));
+                              final offsetAnimation = animation.drive(tween);
+
+                              return SlideTransition(
+                                position: offsetAnimation,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text("Detalles"),
+                    ),
                   ],
                 ),
 
@@ -153,7 +164,7 @@ class ModelKitCard extends StatelessWidget {
 
           ),
 
-          // Etiqueta de marca si existe
+          // Etiqueta de marca
           if (modelKit.brand.isNotEmpty)
             Positioned(
               top: 12,
@@ -182,7 +193,7 @@ class ModelKitCard extends StatelessWidget {
 
 class ModelKit {
   final String name;
-  //final String details;
+  final String? details;
   final String imageUrl;
   final Color color;
   final String price;
@@ -190,7 +201,7 @@ class ModelKit {
 
   ModelKit({
     required this.name,
-    //required this.details,
+    this.details,
     required this.imageUrl,
     required this.color,
     required this.price,
@@ -198,10 +209,21 @@ class ModelKit {
   });
 }
 
+final List<ModelKit> modelKit = [
+  ModelKit(
+    name: 'GWH F-14D Tomcat',
+    details: '1/72 Scale Model Kit #K7201\nIncluye calcomanías para múltiples versiones\nDificultad: Intermedia',
+    imageUrl: 'https://m.media-amazon.com/images/I/61lkqZT17TL._AC_SX679_.jpg',
+    color: const Color(0xFF37474F),
+    price: '599.99',
+    brand: 'GWH',
+  ),
+];
+
 final List<ModelKit> modelKits = [
   ModelKit(
     name: 'GWH F-14D Tomcat',
-    //details: '1/72 Scale Model Kit #K7201',
+    details: '1/72 Scale Model Kit #K7201',
     imageUrl: 'https://m.media-amazon.com/images/I/61lkqZT17TL._AC_SX679_.jpg',
     color: const Color(0xFF37474F),
     price: '599.99',
@@ -210,7 +232,7 @@ final List<ModelKit> modelKits = [
 
   ModelKit(
     name: 'Revell Spitfire Mk.II',
-    //details: '1/48 Scale #03959 - Germany',
+    details: '1/48 Scale #03959 - Germany',
     imageUrl: 'https://m.media-amazon.com/images/I/61MU0p2xuKL._AC_SL1500_.jpg',
     color: const Color(0xFF37474F),
     price: '665.00',
@@ -219,7 +241,7 @@ final List<ModelKit> modelKits = [
 
   ModelKit(
     name: 'Revell F-16CJ Fighting Falcon',
-    //details: '1/144 Scale #60724',
+    details: '1/144 Scale #60724',
     imageUrl: 'https://m.media-amazon.com/images/I/613IZDJzZ5L._AC_SX679_.jpg',
     color: const Color(0xFF37474F),
     price: '549.99',
@@ -228,7 +250,7 @@ final List<ModelKit> modelKits = [
 
   ModelKit(
     name: 'Airfix Messerschmitt Bf 109E-4',
-    //details: '1/72 Scale #A01071',
+    details: '1/72 Scale #A01071',
     imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_966840-MLM81977168472_022025-O.webp',
     color: const Color(0xFF37474F),
     price: '399.99',
@@ -237,7 +259,7 @@ final List<ModelKit> modelKits = [
 
   ModelKit(
     name: 'Italeri Sukhoi Su-34/Su-32',
-    //details: '1/72 Scale #1379',
+    details: '1/72 Scale #1379',
     imageUrl: 'https://http2.mlstatic.com/D_NQ_NP_2X_639089-MLM31921022130_082019-F.webp',
     color: const Color(0xFF37474F),
     price: '837.25',
